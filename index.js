@@ -14,7 +14,7 @@ axios
     // getting   pictures
     const memes = newJsDom.window.document.querySelectorAll('img');
 
-    let dir = 'memes';
+    const dir = 'memes';
 
     // Checking for dir, if not exist just create one
     if (!fs.existsSync(dir)) {
