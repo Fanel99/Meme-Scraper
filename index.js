@@ -4,7 +4,6 @@ const axios = require('axios');
 const request = require('request');
 
 // Remove directory which is not empty (the recursive option deletes the entire directory recursively)
-
 fs.rmdirSync('memes', { recursive: true });
 
 axios
