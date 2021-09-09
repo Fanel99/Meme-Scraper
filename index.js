@@ -1,31 +1,30 @@
-const fs = require('node:fs');
-const { JSDOM } = require('jsdom');
-const axios = require('axios');
-const request = require('request');
+import fs from 'node:fs';
+import axios from 'axios';
+import { JSDOM } from 'jsdom';
+import request from 'request';
 
 // Remove directory which is not empty (the recursive option deletes the entire directory recursively)
 fs.rmdirSync('memes', { recursive: true });
-
 axios
   .get('https://memegen-link-examples-upleveled.netlify.app/')
-
   .then(async (response) => {
     // Get back an JSDOM Object
-    const dom = new JSDOM(response.data);
+    const newJsDom = new JSDOM(response.data);
 
     // getting   pictures
-    const memes = dom.window.document.querySelectorAll('img');
+    const memes = newJsDom.window.document.querySelectorAll('img');
 
-    // Creating new  folder
-    fs.mkdirSync('./memes');
+    let dir = 'memes';
 
-    // looping thru data
+    // Checking for dir, if not exist just create one
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
     for (let i = 0; i < 10; i++) {
-      const source = memes[i].getAttribute('src');
-
-      // brings the memes in .jpg and add names
-      request(source).pipe(
-        fs.createWriteStream(`${__dirname}/memes/img_${i + 1}.jpg`),
+      const sourceForPipe = memes[i].getAttribute('src');
+      // console.log(sourceForPipe);
+      request(sourceForPipe).pipe(
+        fs.createWriteStream(dir + `/img_${i + 1}.jpg`),
       );
     }
   });
